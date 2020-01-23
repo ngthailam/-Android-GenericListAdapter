@@ -1,4 +1,4 @@
-package com.example.genericlistadapter2
+package com.example.genericlistadapter
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

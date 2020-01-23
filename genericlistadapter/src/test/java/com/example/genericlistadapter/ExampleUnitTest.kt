@@ -1,4 +1,4 @@
-package com.example.genericlistadapter2
+package com.example.genericlistadapter
 
 import org.junit.Test
 
