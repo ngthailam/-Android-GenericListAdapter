@@ -33,4 +33,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    // Constraint layout
+    def constraintLayoutVersion = "2.0.0-beta2"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    // Recycler view
+    def recycleviewVersion = "1.1.0-beta04"
+    implementation "androidx.recyclerview:recyclerview:$recycleviewVersion"
+    // Shimmer layout
+    def shimmerLayoutVersion = "2.1.0"
+    implementation "io.supercharge:shimmerlayout:$shimmerLayoutVersion"
 }
