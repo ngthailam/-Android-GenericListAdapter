@@ -3,7 +3,6 @@ package com.example.genericlistadapter.utils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-
 abstract class RecyclerViewEndlessScrollListener(
     private var linearLayoutManager: LinearLayoutManager
 ) : RecyclerView.OnScrollListener() {
