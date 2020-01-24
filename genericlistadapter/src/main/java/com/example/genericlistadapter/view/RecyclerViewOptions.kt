@@ -16,13 +16,13 @@ abstract class RecyclerViewOptions {
     abstract val itemDecoration: RecyclerView.ItemDecoration?
 }
 
-class RecyclerViewOptionsNone(val context: Context) : RecyclerViewOptions() {
+class RecyclerViewOptionsNone(private val context: Context) : RecyclerViewOptions() {
     override val layoutManager: RecyclerView.LayoutManager? = LinearLayoutManager(context)
     override val itemAnimator: RecyclerView.ItemAnimator? = null
     override val itemDecoration: RecyclerView.ItemDecoration? = null
 }
 
-class RecyclerViewOptionsDefault(val context: Context) : RecyclerViewOptions() {
+class RecyclerViewOptionsDefault(private val context: Context) : RecyclerViewOptions() {
     override val layoutManager: RecyclerView.LayoutManager? = LinearLayoutManager(context)
     override val itemAnimator: RecyclerView.ItemAnimator?
         get() {
