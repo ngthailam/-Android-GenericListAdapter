@@ -27,14 +27,11 @@ jdk:
 before_install:
   - yes | sdkmanager "platforms;android-29"
 
-jobs:
-  include:
-    - stage: Lint Check
-      name: "Running lint check..."
-      script: ./gradlew ktlint
-    - stage: Build
-      name: "Building debug..."
-      script: ./gradlew clean assembleDebug
+env:
+  - JOB="./gradlew clean assembleDebug"
+  - JOB="./gradlew ktlint"
+
+script: ${JOB}
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
