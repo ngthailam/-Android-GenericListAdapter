@@ -7,6 +7,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.genericlistadapter.R
+import com.example.genericlistadapter.adapter.GenericListAdapter
 import com.example.genericlistadapter.utils.LIB_TAG
 import com.example.genericlistadapter.utils.RecyclerViewEndlessScrollListener
 import io.supercharge.shimmerlayout.ShimmerLayout
@@ -29,7 +30,7 @@ class GenericListAdapterView @JvmOverloads constructor(
      * Main function to invoke to initialize view
      * @param adapter Adapter that will be attached to display to the RecyclerView
      */
-    override fun initialize(adapter: RecyclerView.Adapter<*>): GenericListAdapterView {
+    override fun initialize(adapter: GenericListAdapter): GenericListAdapterView {
         // set up recycler view
         initRecyclerView()
         // set adapter to recycler view
