@@ -22,7 +22,7 @@ class RecyclerViewOptionsNone(private val context: Context) : RecyclerViewOption
     override val itemDecoration: RecyclerView.ItemDecoration? = null
 }
 
-class RecyclerViewOptionsDefault(private val context: Context) : RecyclerViewOptions() {
+class RecyclerViewOptionsAnimatedAndMargin(private val context: Context) : RecyclerViewOptions() {
     override val layoutManager: RecyclerView.LayoutManager? = LinearLayoutManager(context)
     override val itemAnimator: RecyclerView.ItemAnimator?
         get() {
