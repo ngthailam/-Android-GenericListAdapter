@@ -19,7 +19,8 @@ class GenericListAdapterView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ShimmerLayout(context, attributeSet, defStyleAttr) {
+) : ShimmerLayout(context, attributeSet, defStyleAttr), GenericListAdapterViewManager,
+    GenericListAdapterViewShimmerCallback {
 
     private var endlessScrollListener: RecyclerViewEndlessScrollListener? = null
     private var internalRecyclerView: RecyclerView? = null
@@ -28,7 +29,7 @@ class GenericListAdapterView @JvmOverloads constructor(
      * Main function to invoke to initialize view
      * @param adapter Adapter that will be attached to display to the RecyclerView
      */
-    fun initialize(adapter: RecyclerView.Adapter<*>): GenericListAdapterView {
+    override fun initialize(adapter: RecyclerView.Adapter<*>): GenericListAdapterView {
         // set up recycler view
         initRecyclerView()
         // set adapter to recycler view
@@ -41,7 +42,7 @@ class GenericListAdapterView @JvmOverloads constructor(
      * see [RecyclerViewEndlessScrollListener] for details
      * @param onLoadMore function to invoke on scroll to bottom to load more
      */
-    fun addLinearLoadMoreListener(onLoadMore: () -> Unit = {}): GenericListAdapterView {
+    override fun addLinearLoadMoreListener(onLoadMore: () -> Unit): GenericListAdapterView {
         // Check to ensure layout manager is LinearLayoutManager
         require(internalRecyclerView?.layoutManager is LinearLayoutManager) {
             "TransactionHistoryRecyclerView#layoutManager must be LinearLayoutManager"
@@ -69,7 +70,7 @@ class GenericListAdapterView @JvmOverloads constructor(
      * Set options for recycler view including layoutManager, itemAnimator and itemDecoration
      * @param options see [RecyclerViewOptions]
      */
-    fun setRecyclerViewOptions(options: RecyclerViewOptions?): GenericListAdapterView {
+    override fun setRecyclerViewOptions(options: RecyclerViewOptions?): GenericListAdapterView {
         internalRecyclerView?.apply {
             layoutManager = options?.layoutManager
             itemAnimator = options?.itemAnimator
@@ -79,7 +80,7 @@ class GenericListAdapterView @JvmOverloads constructor(
     }
 
     /** Returns internal recycler view */
-    fun getRecyclerView(): RecyclerView? {
+    override fun getRecyclerView(): RecyclerView? {
         return try {
             internalRecyclerView
         } catch (t: Throwable) {
@@ -89,6 +90,14 @@ class GenericListAdapterView @JvmOverloads constructor(
         }
     }
 
+    override fun startShimmer() {
+        startShimmerAnimation()
+    }
+
+    override fun stopShimmer() {
+        stopShimmerAnimation()
+    }
+
     /** Lazy initialze internal RecyclerView */
     private fun initRecyclerView() {
         if (internalRecyclerView != null) return
@@ -96,4 +105,9 @@ class GenericListAdapterView @JvmOverloads constructor(
         View.inflate(context, R.layout.gla_recycler_view, this)
         internalRecyclerView = glaInternalRv
     }
+}
+
+interface GenericListAdapterViewShimmerCallback {
+    fun startShimmer()
+    fun stopShimmer()
 }
