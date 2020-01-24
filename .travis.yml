@@ -30,6 +30,7 @@ before_install:
 env:
   - JOB="./gradlew clean assembleDebug"
   - JOB="./gradlew ktlint"
+  - JOB="./gradlew test"
 
 script: ${JOB}
 
