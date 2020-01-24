@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="gla_light_blue">#F7F6FB</color>
+    <color name="gla_bg_gray">#f6f6f6</color>
 </resources>

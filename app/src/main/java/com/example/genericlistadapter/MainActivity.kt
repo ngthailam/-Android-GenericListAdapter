@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupUI() {
         // Init Adapter
         adapter = GenericListAdapter.Builder()
+            .addHeaderItem()
             .addItemModule(FakeDataItemType.VIEW_TYPE, FakeDataItemType())
             .build()
         // Init view
