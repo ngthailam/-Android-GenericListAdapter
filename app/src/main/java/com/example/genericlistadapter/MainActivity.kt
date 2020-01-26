@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             .addHeaderItem()
             .addItemModule(FakeDataItemType.VIEW_TYPE, FakeDataItemType())
             .addLoadMoreItem()
-            .addSkeletonItem()
+            .addSkeletonItem(CustomSkeletonItem())
             .build()
         // Init view
         glaView.initialize(adapter)
