@@ -1,7 +1,9 @@
 package com.example.genericlistadapter.adapter
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.genericlistadapter.adapter.model.BaseItem
@@ -12,9 +14,12 @@ import com.example.genericlistadapter.adapter.model.LoadMoreItem
 import com.example.genericlistadapter.adapter.model.LoadMoreItemType
 import com.example.genericlistadapter.adapter.model.SkeletonItem
 import com.example.genericlistadapter.adapter.model.SkeletonItemType
+import com.example.genericlistadapter.utils.LIB_TAG
 import com.example.genericlistadapter.utils.VIEW_TYPE_HEADER
 import com.example.genericlistadapter.utils.VIEW_TYPE_LOADMORE
 import com.example.genericlistadapter.utils.VIEW_TYPE_SKELETON
+import com.example.genericlistadapter.utils.animation.DefaultEnterAnimType
+import com.example.genericlistadapter.utils.animation.EnterAnimType
 import java.lang.IllegalArgumentException
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -22,6 +27,11 @@ class GenericListAdapter private constructor() :
     ListAdapter<BaseItem, GenericListAdapter.BaseViewHolder>(
         DiffUtilCallback()
     ) {
+
+    companion object {
+        const val DEFAULT_LAST_ANIMATED_POSITION = -1
+    }
+
     /** A hashmap containing all view types */
     private var hashMap: HashMap<Int, BaseItemType<BaseItem>> = hashMapOf()
     private var headerItemType: HeaderItemType? = null
@@ -32,11 +42,17 @@ class GenericListAdapter private constructor() :
     private var isLoadingMore: AtomicBoolean = AtomicBoolean(false)
     private var isRefreshing: AtomicBoolean = AtomicBoolean(false)
 
+    /** Helper animations */
+    // helper for making animation for on scroll to item ( trigger once per item per refresh )
+    private var lastAnimatedPosition = DEFAULT_LAST_ANIMATED_POSITION
+    private var animationType: EnterAnimType? = null
+
     private constructor(builder: Builder) : this() {
         this.hashMap = builder.hashMap
         this.headerItemType = builder.headerItemType
         this.loadMoreItemType = builder.loadMoreItemType
         this.skeletonItemType = builder.skeletonItemType
+        this.animationType = builder.animationType
     }
 
     /** Use in place of ListAdapter`s submit list with custom behavior */
@@ -64,6 +80,7 @@ class GenericListAdapter private constructor() :
         // Show skeleton if not already refreshing
         if (isRefreshing.compareAndSet(false, true)) {
             showSkeleton()
+            lastAnimatedPosition = DEFAULT_LAST_ANIMATED_POSITION
         }
     }
 
@@ -74,7 +91,7 @@ class GenericListAdapter private constructor() :
         )
     }
 
-    fun resetState() {
+    private fun resetState() {
         isLoadingMore.set(false)
         isRefreshing.set(false)
     }
@@ -123,23 +140,48 @@ class GenericListAdapter private constructor() :
             hashMap[key]?.let {
                 if (it.isSameModule(item)) {
                     it.onBindViewHolder(holder, item)
+                    setItemEnterAnimation(holder.itemView, position)
                     return@loop
                 }
             }
         }
     }
 
+    // //////////////////////////
+    //          HELPER FUNCTIONS
+    // //////////////////////////
     private fun hasHeader(): Boolean = this.headerItemType != null
+
+    /**
+     * set the enter animation for item, only items that are newly added below will have this animation ( through #lastPosition )
+     * @param viewToAnimate: The view to be animated
+     * @param position: position of item in list
+     */
+    private fun setItemEnterAnimation(viewToAnimate: View, position: Int) {
+        if (position > lastAnimatedPosition) {
+            try {
+                val animation = AnimationUtils.loadAnimation(viewToAnimate.context, animationType?.animRes!!)
+                viewToAnimate.startAnimation(animation)
+            } catch (t: Throwable) {
+                Log.e(LIB_TAG, "GenericListAdapter #setItemEnterAnimation error")
+                t.printStackTrace()
+            }
+            lastAnimatedPosition = position
+        }
+    }
 
     abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
-    /** Builder class for the adapter following Builder Pattern */
+    // //////////////////////////
+    //          BUILDER FOR ADAPTER
+    // //////////////////////////
     class Builder {
 
         internal val hashMap: HashMap<Int, BaseItemType<BaseItem>> = hashMapOf()
         internal var headerItemType: HeaderItemType? = null
         internal var loadMoreItemType: LoadMoreItemType? = null
         internal var skeletonItemType: SkeletonItemType? = null
+        internal var animationType: EnterAnimType? = null
 
         fun addItemModule(viewType: Int, abc: BaseItemType<out BaseItem>): Builder {
             hashMap[viewType] = abc as? BaseItemType<BaseItem>
@@ -160,6 +202,11 @@ class GenericListAdapter private constructor() :
 
         fun addSkeletonItem(skeletonItemType: SkeletonItemType? = null): Builder {
             this.skeletonItemType = skeletonItemType ?: SkeletonItemType()
+            return this
+        }
+
+        fun addItemAnimation(animationType: EnterAnimType? = null): Builder {
+            this.animationType = animationType ?: DefaultEnterAnimType()
             return this
         }
 
