@@ -4,29 +4,29 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.genericlistadapter.R
 import com.example.genericlistadapter.adapter.GenericListAdapter
-import com.example.genericlistadapter.utils.VIEW_TYPE_HEADER
+import com.example.genericlistadapter.utils.VIEW_TYPE_LOADMORE
 import com.example.genericlistadapter.utils.inflateView
 
-class HeaderItem : BaseItem() {
+open class LoadMoreItem : BaseItem() {
 
     override fun areItemsTheSame(other: Any?): Boolean = other is HeaderItem
 
     override fun areContentsTheSame(other: Any?): Boolean = other is HeaderItem
 }
 
-class HeaderItemType : BaseItemType<HeaderItem>() {
+open class LoadMoreItemType : BaseItemType<LoadMoreItem>() {
 
-    override fun getViewType(): Int = VIEW_TYPE_HEADER
+    override fun getViewType(): Int = VIEW_TYPE_LOADMORE
 
-    override fun isSameModule(item: BaseItem): Boolean = item is HeaderItem
+    override fun isSameModule(item: BaseItem): Boolean = item is LoadMoreItem
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): GenericListAdapter.BaseViewHolder {
-        val view = parent.inflateView(R.layout.gla_header_item)
-        return HeaderItemViewHolder(view)
+        val view = parent.inflateView(R.layout.gla_loadmore_item)
+        return LoadMoreItemViewHolder(view)
     }
 }
 
-class HeaderItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)
+open class LoadMoreItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)

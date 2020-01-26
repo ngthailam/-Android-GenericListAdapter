@@ -46,7 +46,7 @@ class GenericListAdapterView @JvmOverloads constructor(
     override fun addLinearLoadMoreListener(onLoadMore: () -> Unit): GenericListAdapterView {
         // Check to ensure layout manager is LinearLayoutManager
         require(internalRecyclerView?.layoutManager is LinearLayoutManager) {
-            "TransactionHistoryRecyclerView#layoutManager must be LinearLayoutManager"
+            "TransactionHistoryRecyclerView#layoutManager must be LinearLayoutManager, remember to call #setRecyclerViewOptions first"
         }
 
         // Lazy init listener and attach it
