@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/gla_dp_16"
+    android:layout_height="@dimen/gla_dp_8"
     android:background="@color/gla_bg_gray">
 </FrameLayout>

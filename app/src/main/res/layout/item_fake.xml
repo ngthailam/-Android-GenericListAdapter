@@ -1,15 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:layout_marginTop="@dimen/gla_dp_16"
-    android:background="@android:color/holo_red_dark"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:foreground="?attr/selectableItemBackground">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/mTextView"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivService"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="@dimen/gla_dp_16"
+        android:layout_marginTop="@dimen/gla_dp_16"
+        android:layout_marginBottom="@dimen/gla_dp_16"
+        android:src="@drawable/gla_ic_transaction_payment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/gla_dp_16"
+        android:layout_marginTop="@dimen/gla_dp_16"
+        android:layout_marginEnd="@dimen/gla_dp_16"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#999999"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toStartOf="@+id/tvAmountCharged"
+        app:layout_constraintStart_toEndOf="@+id/ivService"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginEnd="@dimen/gla_dp_16"
+        tools:text="Thanh toán Vinmart" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/gla_dp_16"
+        android:layout_marginTop="@dimen/gla_dp_8"
+        android:layout_marginEnd="@dimen/gla_dp_16"
+        android:layout_marginBottom="@dimen/gla_dp_16"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#999999"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvAmountCharged"
+        app:layout_constraintStart_toEndOf="@+id/ivService"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        tools:text="10:00 - 30/10/2018" />
+
+    <TextView
+        android:id="@+id/tvAmountCharged"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="aokvoaskovkaso" />
-</LinearLayout>
+        android:layout_marginTop="@dimen/gla_dp_16"
+        android:layout_marginEnd="@dimen/gla_dp_16"
+        android:text="acv"
+        android:textColor="#00bc3c"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="+300.000đ" />
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/gla_dp_16"
+        android:layout_marginEnd="@dimen/gla_dp_16"
+        android:textColor="#999999"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAmountCharged"
+        tools:text="Thành công" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
