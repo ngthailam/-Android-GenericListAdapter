@@ -10,8 +10,11 @@ import com.example.genericlistadapter.adapter.model.HeaderItem
 import com.example.genericlistadapter.adapter.model.HeaderItemType
 import com.example.genericlistadapter.adapter.model.LoadMoreItem
 import com.example.genericlistadapter.adapter.model.LoadMoreItemType
+import com.example.genericlistadapter.adapter.model.SkeletonItem
+import com.example.genericlistadapter.adapter.model.SkeletonItemType
 import com.example.genericlistadapter.utils.VIEW_TYPE_HEADER
 import com.example.genericlistadapter.utils.VIEW_TYPE_LOADMORE
+import com.example.genericlistadapter.utils.VIEW_TYPE_SKELETON
 import java.lang.IllegalArgumentException
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -23,14 +26,17 @@ class GenericListAdapter private constructor() :
     private var hashMap: HashMap<Int, BaseItemType<BaseItem>> = hashMapOf()
     private var headerItemType: HeaderItemType? = null
     private var loadMoreItemType: LoadMoreItemType? = null
+    private var skeletonItemType: SkeletonItemType? = null
 
     /** State management */
     private var isLoadingMore: AtomicBoolean = AtomicBoolean(false)
+    private var isRefreshing: AtomicBoolean = AtomicBoolean(false)
 
     private constructor(builder: Builder) : this() {
         this.hashMap = builder.hashMap
         this.headerItemType = builder.headerItemType
         this.loadMoreItemType = builder.loadMoreItemType
+        this.skeletonItemType = builder.skeletonItemType
     }
 
     /** Use in place of ListAdapter`s submit list with custom behavior */
@@ -44,7 +50,7 @@ class GenericListAdapter private constructor() :
     /** Call when load more is invoked to add load more indicator to bottom of the list */
     fun onLoadMore() {
         // Fast quit if already loading more
-        if (isLoadingMore.get()) return
+        if (isLoadingMore.get() || isRefreshing.get()) return
         // Add load more item
         if (isLoadingMore.compareAndSet(false, true)) {
             val tempList = currentList.toMutableList()
@@ -53,14 +59,31 @@ class GenericListAdapter private constructor() :
         }
     }
 
+    /** Call when you refresh the list */
+    fun onRefresh() {
+        // Show skeleton if not already refreshing
+        if (isRefreshing.compareAndSet(false, true)) {
+            showSkeleton()
+        }
+    }
+
+    private fun showSkeleton() {
+        submitList(
+            // TODO: remove hard coded 10
+            List(10) { SkeletonItem() }
+        )
+    }
+
     fun resetState() {
         isLoadingMore.set(false)
+        isRefreshing.set(false)
     }
 
     override fun getItemViewType(position: Int): Int {
         when (val item = getItem(position)) {
             is HeaderItem -> return VIEW_TYPE_HEADER
             is LoadMoreItem -> return VIEW_TYPE_LOADMORE
+            is SkeletonItem -> return VIEW_TYPE_SKELETON
             else -> {
                 hashMap.keys.forEach { key ->
                     hashMap[key]?.let {
@@ -82,6 +105,10 @@ class GenericListAdapter private constructor() :
             VIEW_TYPE_LOADMORE -> {
                 loadMoreItemType?.onCreateViewHolder(parent, viewType)
                     ?: throw Throwable("GenericListAdapter #onCreateViewHolder Builder loadMoreItemType is null")
+            }
+            VIEW_TYPE_SKELETON -> {
+                skeletonItemType?.onCreateViewHolder(parent, viewType)
+                    ?: throw Throwable("GenericListAdapter #onCreateViewHolder Builder skeletonItemType is null")
             }
             else -> {
                 hashMap[viewType]?.onCreateViewHolder(parent, viewType)
@@ -112,6 +139,7 @@ class GenericListAdapter private constructor() :
         internal val hashMap: HashMap<Int, BaseItemType<BaseItem>> = hashMapOf()
         internal var headerItemType: HeaderItemType? = null
         internal var loadMoreItemType: LoadMoreItemType? = null
+        internal var skeletonItemType: SkeletonItemType? = null
 
         fun addItemModule(viewType: Int, abc: BaseItemType<out BaseItem>): Builder {
             hashMap[viewType] = abc as? BaseItemType<BaseItem>
@@ -127,6 +155,11 @@ class GenericListAdapter private constructor() :
 
         fun addLoadMoreItem(loadMoreItemType: LoadMoreItemType? = null): Builder {
             this.loadMoreItemType = loadMoreItemType ?: LoadMoreItemType()
+            return this
+        }
+
+        fun addSkeletonItem(skeletonItemType: SkeletonItemType? = null): Builder {
+            this.skeletonItemType = skeletonItemType ?: SkeletonItemType()
             return this
         }
 

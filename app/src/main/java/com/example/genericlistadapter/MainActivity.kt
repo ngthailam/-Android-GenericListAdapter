@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
             .addHeaderItem()
             .addItemModule(FakeDataItemType.VIEW_TYPE, FakeDataItemType())
             .addLoadMoreItem()
+            .addSkeletonItem()
             .build()
         // Init view
         glaView.initialize(adapter)
@@ -33,10 +34,12 @@ class MainActivity : AppCompatActivity() {
             .addLinearLoadMoreListener {
                 println("ZZLL load more invoked....")
                 adapter.onLoadMore()
-                setDataWithDelay(3, 10)
+                setDataWithDelay(6, 10)
             }
+        // Set initial state
+        adapter.onRefresh()
         // Set data to list
-        setDataWithDelay(0, 10)
+        setDataWithDelay(5, 10)
 
     }
 

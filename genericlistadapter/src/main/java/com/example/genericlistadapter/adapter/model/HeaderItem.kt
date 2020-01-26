@@ -7,14 +7,14 @@ import com.example.genericlistadapter.adapter.GenericListAdapter
 import com.example.genericlistadapter.utils.VIEW_TYPE_HEADER
 import com.example.genericlistadapter.utils.inflateView
 
-class HeaderItem : BaseItem() {
+open class HeaderItem : BaseItem() {
 
     override fun areItemsTheSame(other: Any?): Boolean = other is HeaderItem
 
     override fun areContentsTheSame(other: Any?): Boolean = other is HeaderItem
 }
 
-class HeaderItemType : BaseItemType<HeaderItem>() {
+open class HeaderItemType : BaseItemType<HeaderItem>() {
 
     override fun getViewType(): Int = VIEW_TYPE_HEADER
 
@@ -29,4 +29,4 @@ class HeaderItemType : BaseItemType<HeaderItem>() {
     }
 }
 
-class HeaderItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)
+open class HeaderItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)
