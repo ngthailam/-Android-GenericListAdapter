@@ -10,6 +10,7 @@ import com.example.genericlistadapter.R
 import com.example.genericlistadapter.adapter.GenericListAdapter
 import com.example.genericlistadapter.utils.LIB_TAG
 import com.example.genericlistadapter.utils.RecyclerViewEndlessScrollListener
+import com.example.genericlistadapter.utils.SkeletonOptions
 import io.supercharge.shimmerlayout.ShimmerLayout
 import kotlinx.android.synthetic.main.gla_recycler_view.view.*
 
@@ -20,8 +21,7 @@ class GenericListAdapterView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ShimmerLayout(context, attributeSet, defStyleAttr), GenericListAdapterViewManager,
-    GenericListAdapterViewShimmerCallback {
+) : ShimmerLayout(context, attributeSet, defStyleAttr), GenericListAdapterViewManager {
 
     private var endlessScrollListener: RecyclerViewEndlessScrollListener? = null
     private var internalRecyclerView: RecyclerView? = null
@@ -91,12 +91,12 @@ class GenericListAdapterView @JvmOverloads constructor(
         }
     }
 
-    override fun startShimmer() {
-        startShimmerAnimation()
-    }
-
-    override fun stopShimmer() {
-        stopShimmerAnimation()
+    fun setSkeletonOptions(options: SkeletonOptions?) {
+        options?.let {
+            setShimmerAngle(it.angle)
+            setShimmerColor(it.color)
+            setShimmerAnimationDuration(it.duration)
+        }
     }
 
     /** Lazy initialze internal RecyclerView */
@@ -106,9 +106,4 @@ class GenericListAdapterView @JvmOverloads constructor(
         View.inflate(context, R.layout.gla_recycler_view, this)
         internalRecyclerView = glaInternalRv
     }
-}
-
-interface GenericListAdapterViewShimmerCallback {
-    fun startShimmer()
-    fun stopShimmer()
 }

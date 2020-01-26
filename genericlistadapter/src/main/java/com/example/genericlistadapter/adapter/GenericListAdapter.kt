@@ -15,11 +15,13 @@ import com.example.genericlistadapter.adapter.model.LoadMoreItemType
 import com.example.genericlistadapter.adapter.model.SkeletonItem
 import com.example.genericlistadapter.adapter.model.SkeletonItemType
 import com.example.genericlistadapter.utils.LIB_TAG
+import com.example.genericlistadapter.utils.SkeletonOptions
 import com.example.genericlistadapter.utils.VIEW_TYPE_HEADER
 import com.example.genericlistadapter.utils.VIEW_TYPE_LOADMORE
 import com.example.genericlistadapter.utils.VIEW_TYPE_SKELETON
 import com.example.genericlistadapter.utils.animation.DefaultEnterAnimType
 import com.example.genericlistadapter.utils.animation.EnterAnimType
+import com.example.genericlistadapter.view.GenericListAdapterView
 import java.lang.IllegalArgumentException
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -37,6 +39,7 @@ class GenericListAdapter private constructor() :
     private var headerItemType: HeaderItemType? = null
     private var loadMoreItemType: LoadMoreItemType? = null
     private var skeletonItemType: SkeletonItemType? = null
+    private var skeletonOptions: SkeletonOptions? = null
 
     /** State management */
     private var isLoadingMore: AtomicBoolean = AtomicBoolean(false)
@@ -47,20 +50,26 @@ class GenericListAdapter private constructor() :
     private var lastAnimatedPosition = DEFAULT_LAST_ANIMATED_POSITION
     private var animationType: EnterAnimType? = null
 
+    private var adapterView: GenericListAdapterView? = null
+
     private constructor(builder: Builder) : this() {
         this.hashMap = builder.hashMap
         this.headerItemType = builder.headerItemType
         this.loadMoreItemType = builder.loadMoreItemType
         this.skeletonItemType = builder.skeletonItemType
         this.animationType = builder.animationType
+        builder.adapterView?.let {
+            this.adapterView = it.apply { setSkeletonOptions(builder.skeletonOptions) }
+            this.skeletonOptions = builder.skeletonOptions
+        }
     }
 
     /** Use in place of ListAdapter`s submit list with custom behavior */
     fun setData(data: List<BaseItem>) {
         val tempList = data.toMutableList()
         if (hasHeader()) tempList.add(0, HeaderItem())
-        submitList(tempList)
         resetState()
+        submitList(tempList)
     }
 
     /** Call when load more is invoked to add load more indicator to bottom of the list */
@@ -85,15 +94,18 @@ class GenericListAdapter private constructor() :
     }
 
     private fun showSkeleton() {
+        adapterView?.startShimmerAnimation()
         submitList(
-            // TODO: remove hard coded 10
-            List(10) { SkeletonItem() }
+            List(skeletonOptions?.itemCount ?: 0) {
+                SkeletonItem()
+            }
         )
     }
 
     private fun resetState() {
         isLoadingMore.set(false)
         isRefreshing.set(false)
+        adapterView?.stopShimmerAnimation()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -182,6 +194,8 @@ class GenericListAdapter private constructor() :
         internal var loadMoreItemType: LoadMoreItemType? = null
         internal var skeletonItemType: SkeletonItemType? = null
         internal var animationType: EnterAnimType? = null
+        internal var skeletonOptions: SkeletonOptions? = null
+        internal var adapterView: GenericListAdapterView? = null
 
         fun addItemModule(viewType: Int, abc: BaseItemType<out BaseItem>): Builder {
             hashMap[viewType] = abc as? BaseItemType<BaseItem>
@@ -207,6 +221,16 @@ class GenericListAdapter private constructor() :
 
         fun addItemAnimation(animationType: EnterAnimType? = null): Builder {
             this.animationType = animationType ?: DefaultEnterAnimType()
+            return this
+        }
+
+        fun setSkeletonOptions(skeletonOptions: SkeletonOptions? = null): Builder {
+            this.skeletonOptions = skeletonOptions ?: SkeletonOptions()
+            return this
+        }
+
+        fun attachTo(attachedView: GenericListAdapterView): Builder {
+            adapterView = attachedView
             return this
         }
 
