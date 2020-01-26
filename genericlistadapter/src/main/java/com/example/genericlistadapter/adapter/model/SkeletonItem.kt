@@ -7,26 +7,26 @@ import com.example.genericlistadapter.adapter.GenericListAdapter
 import com.example.genericlistadapter.utils.VIEW_TYPE_LOADMORE
 import com.example.genericlistadapter.utils.inflateView
 
-open class LoadMoreItem : BaseItem() {
+open class SkeletonItem : BaseItem() {
 
-    override fun areItemsTheSame(other: Any?): Boolean = other is LoadMoreItem
+    override fun areItemsTheSame(other: Any?): Boolean = other is SkeletonItem
 
-    override fun areContentsTheSame(other: Any?): Boolean = other is LoadMoreItem
+    override fun areContentsTheSame(other: Any?): Boolean = other is SkeletonItem
 }
 
-open class LoadMoreItemType : BaseItemType<LoadMoreItem>() {
+open class SkeletonItemType : BaseItemType<SkeletonItem>() {
 
     override fun getViewType(): Int = VIEW_TYPE_LOADMORE
 
-    override fun isSameModule(item: BaseItem): Boolean = item is LoadMoreItem
+    override fun isSameModule(item: BaseItem): Boolean = item is SkeletonItem
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): GenericListAdapter.BaseViewHolder {
-        val view = parent.inflateView(R.layout.gla_loadmore_item)
-        return LoadMoreItemViewHolder(view)
+        val view = parent.inflateView(R.layout.gla_skeleton_item)
+        return SkeletonItemViewHolder(view)
     }
 }
 
-open class LoadMoreItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)
+open class SkeletonItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)
