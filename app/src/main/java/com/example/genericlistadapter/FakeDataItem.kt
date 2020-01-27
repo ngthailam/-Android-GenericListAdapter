@@ -3,6 +3,7 @@ package com.example.genericlistadapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.genericlistadapter.adapter.GenericListAdapter
 import com.example.genericlistadapter.adapter.model.BaseItem
 import com.example.genericlistadapter.adapter.model.BaseItemType
@@ -36,17 +37,25 @@ class FakeDataItemType() : BaseItemType<FakeDataItem>()  {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): GenericListAdapter.BaseViewHolder {
+    ): GenericListAdapter.BaseViewHolder<FakeDataItem> {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_fake, parent, false)
         return FakeDataItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: GenericListAdapter.BaseViewHolder, item: FakeDataItem) {
-        super.onBindViewHolder(holder, item)
-        holder.itemView.tvTitle.text = item.id
+    override fun onBindViewHolder(
+        holder: GenericListAdapter.BaseViewHolder<FakeDataItem>,
+        item: FakeDataItem
+    ) {
+        holder.onBind(item)
     }
 }
 
-class FakeDataItemViewHolder(
-    private val view: View
-): GenericListAdapter.BaseViewHolder(view)
+class FakeDataItemViewHolder(view: View): GenericListAdapter.BaseViewHolder<FakeDataItem>(view) {
+    override fun onBind(item: FakeDataItem) {
+        super.onBind(item)
+        itemView.tvTitle.text = item.id
+        itemView.setOnClickListener {
+            Toast.makeText(itemView.context, "item ${item.id}", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
