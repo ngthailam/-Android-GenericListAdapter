@@ -23,10 +23,10 @@ open class SkeletonItemType : BaseItemType<SkeletonItem>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): GenericListAdapter.BaseViewHolder {
+    ): GenericListAdapter.BaseViewHolder<SkeletonItem> {
         val view = parent.inflateView(R.layout.gla_skeleton_item)
         return SkeletonItemViewHolder(view)
     }
 }
 
-open class SkeletonItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)
+open class SkeletonItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder<SkeletonItem>(view)

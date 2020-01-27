@@ -26,7 +26,7 @@ import java.lang.IllegalArgumentException
 import java.util.concurrent.atomic.AtomicBoolean
 
 class GenericListAdapter private constructor() :
-    ListAdapter<BaseItem, GenericListAdapter.BaseViewHolder>(
+    ListAdapter<BaseItem, GenericListAdapter.BaseViewHolder<out BaseItem>>(
         DiffUtilCallback()
     ) {
 
@@ -133,7 +133,7 @@ class GenericListAdapter private constructor() :
         throw IllegalArgumentException("GenericListAdapter #getItemViewType view does not have a view type")
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<out BaseItem> {
         return when (viewType) {
             VIEW_TYPE_HEADER -> {
                 headerItemType?.onCreateViewHolder(parent, viewType)
@@ -154,12 +154,12 @@ class GenericListAdapter private constructor() :
         }
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<out BaseItem>, position: Int) {
         hashMap.keys.forEach loop@{ key ->
             val item = getItem(position)
             hashMap[key]?.let {
                 if (it.isSameModule(item)) {
-                    it.onBindViewHolder(holder, item)
+                    it.onBindViewHolder(holder as BaseViewHolder<BaseItem>, item)
                     setItemEnterAnimation(holder.itemView, position)
                     return@loop
                 }
@@ -190,7 +190,13 @@ class GenericListAdapter private constructor() :
         }
     }
 
-    abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    abstract class BaseViewHolder<T>(view: View) : RecyclerView.ViewHolder(view) {
+        open fun onBind(item: T) {
+            // Implement here
+        }
+    }
+
+    abstract class EmptyViewHolder(view: View) : BaseViewHolder<Any>(view)
 
     // //////////////////////////
     //          BUILDER FOR ADAPTER

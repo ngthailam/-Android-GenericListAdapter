@@ -12,7 +12,7 @@ class CustomSkeletonItem : SkeletonItemType() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): GenericListAdapter.BaseViewHolder {
+    ): GenericListAdapter.BaseViewHolder<SkeletonItem> {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.gla_example_skeleton_item, parent, false)
         return SkeletonItemViewHolder(view)

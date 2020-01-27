@@ -23,10 +23,10 @@ open class LoadMoreItemType : BaseItemType<LoadMoreItem>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): GenericListAdapter.BaseViewHolder {
+    ): GenericListAdapter.BaseViewHolder<LoadMoreItem> {
         val view = parent.inflateView(R.layout.gla_loadmore_item)
         return LoadMoreItemViewHolder(view)
     }
 }
 
-open class LoadMoreItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)
+open class LoadMoreItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder<LoadMoreItem>(view)

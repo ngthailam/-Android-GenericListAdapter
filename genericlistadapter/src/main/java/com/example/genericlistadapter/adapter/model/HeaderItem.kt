@@ -23,10 +23,10 @@ open class HeaderItemType : BaseItemType<HeaderItem>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): GenericListAdapter.BaseViewHolder {
+    ): GenericListAdapter.BaseViewHolder<HeaderItem> {
         val view = parent.inflateView(R.layout.gla_header_item)
         return HeaderItemViewHolder(view)
     }
 }
 
-open class HeaderItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder(view)
+open class HeaderItemViewHolder(view: View) : GenericListAdapter.BaseViewHolder<HeaderItem>(view)
