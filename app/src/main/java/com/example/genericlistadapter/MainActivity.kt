@@ -23,11 +23,13 @@ class MainActivity : AppCompatActivity() {
     private fun setupUI() {
         // Init Adapter
         adapter = GenericListAdapter.Builder()
+            .attachTo(glaView)
             .addHeaderItem()
             .addItemModule(FakeDataItemType.VIEW_TYPE, FakeDataItemType())
             .addLoadMoreItem()
             .addSkeletonItem(CustomSkeletonItem())
             .addItemAnimation()
+            .setSkeletonOptions()
             .build()
         // Init view
         glaView.initialize(adapter)
