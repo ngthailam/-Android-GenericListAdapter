@@ -65,7 +65,13 @@ class GenericListAdapter private constructor() :
     }
 
     /** Use in place of ListAdapter`s submit list with custom behavior */
-    fun setData(data: List<BaseItem>) {
+    fun setData(data: List<BaseItem>?) {
+        if (data.isNullOrEmpty()) {
+            resetState()
+            submitList(null)
+            return
+        }
+
         val tempList = data.toMutableList()
         if (hasHeader()) tempList.add(0, HeaderItem())
         resetState()
@@ -75,7 +81,7 @@ class GenericListAdapter private constructor() :
     /** Call when load more is invoked to add load more indicator to bottom of the list */
     fun onLoadMore() {
         // Fast quit if already loading more
-        if (isLoadingMore.get() || isRefreshing.get()) return
+        if (isLoadingMore.get() || isRefreshing.get() || itemCount == 0) return
         // Add load more item
         if (isLoadingMore.compareAndSet(false, true)) {
             val tempList = currentList.toMutableList()
@@ -92,6 +98,8 @@ class GenericListAdapter private constructor() :
             lastAnimatedPosition = DEFAULT_LAST_ANIMATED_POSITION
         }
     }
+
+    fun getIsLoadingMore(): Boolean = isLoadingMore.get()
 
     private fun showSkeleton() {
         adapterView?.startShimmerAnimation()
@@ -231,6 +239,15 @@ class GenericListAdapter private constructor() :
 
         fun attachTo(attachedView: GenericListAdapterView): Builder {
             adapterView = attachedView
+            return this
+        }
+
+        fun setDefault(): Builder {
+            addHeaderItem()
+            addLoadMoreItem()
+            addSkeletonItem()
+            addItemAnimation()
+            setSkeletonOptions()
             return this
         }
 

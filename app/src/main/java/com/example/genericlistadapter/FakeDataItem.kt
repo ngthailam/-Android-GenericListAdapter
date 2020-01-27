@@ -43,6 +43,7 @@ class FakeDataItemType() : BaseItemType<FakeDataItem>()  {
 
     override fun onBindViewHolder(holder: GenericListAdapter.BaseViewHolder, item: FakeDataItem) {
         super.onBindViewHolder(holder, item)
+        holder.itemView.tvTitle.text = item.id
     }
 }
 

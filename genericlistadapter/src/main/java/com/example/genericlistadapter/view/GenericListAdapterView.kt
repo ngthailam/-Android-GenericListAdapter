@@ -99,6 +99,12 @@ class GenericListAdapterView @JvmOverloads constructor(
         }
     }
 
+    fun setIsLoading(isLoading: Boolean) {
+        endlessScrollListener?.isLoading(isLoading)
+    }
+
+    fun getIsLoading(): Boolean = endlessScrollListener?.getIsLoading() ?: false
+
     /** Lazy initialze internal RecyclerView */
     private fun initRecyclerView() {
         if (internalRecyclerView != null) return

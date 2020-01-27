@@ -48,5 +48,7 @@ abstract class RecyclerViewEndlessScrollListener(
         this.isLoading = isLoading
     }
 
+    fun getIsLoading(): Boolean = this.isLoading
+
     abstract fun onLoadMore()
 }
