@@ -75,6 +75,7 @@ class GenericListAdapterView @JvmOverloads constructor(
         internalRecyclerView?.apply {
             layoutManager = options?.layoutManager
             itemAnimator = options?.itemAnimator
+            overScrollMode = View.OVER_SCROLL_NEVER
             options?.itemDecoration?.let { addItemDecoration(it) }
         }
         return this
