@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.example.genericlistadapter.adapter.GenericListAdapter
+import com.example.genericlistadapter.adapter.model.BaseItem
 import com.example.genericlistadapter.view.RecyclerViewOptionsAnimatedAndMargin
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: GenericListAdapter
     private var lastIndex = 0
-    private var fakeList = mutableListOf<FakeDataItem>()
+    private var fakeList = mutableListOf<BaseItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +27,8 @@ class MainActivity : AppCompatActivity() {
             addItem()
         }
         btnRemove.setOnClickListener {
-
+            fakeList.removeAt(fakeList.size - 1)
+            adapter.setData(fakeList)
         }
         btnClear.setOnClickListener {
             adapter.setData(null)
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             .attachTo(glaView)
             .addHeaderItem()
             .addItemModule(FakeDataItemType.VIEW_TYPE, FakeDataItemType())
+            .addItemModule(FakeDataItem2Type.VIEW_TYPE, FakeDataItem2Type())
             .addLoadMoreItem()
             .addSkeletonItem(CustomSkeletonItem())
             .addItemAnimation()
@@ -63,13 +66,13 @@ class MainActivity : AppCompatActivity() {
         adapter.setData(fakeList)
     }
 
-    private fun getInitialList(): List<FakeDataItem> {
+    private fun getInitialList(): List<BaseItem> {
         lastIndex = 6
         return listOf(
             FakeDataItem("1", 1),
-            FakeDataItem("2", 2),
+            FakeDataItem2("2", "email1", "add1"),
             FakeDataItem("3", 3),
-            FakeDataItem("4", 4),
+            FakeDataItem2("4", "email2", "add2"),
             FakeDataItem("5", 5)
         )
     }
@@ -88,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         }, delaySeconds * 1000L)
     }
 
-    private fun  generateFakeData(num: Int = 1): List<FakeDataItem> {
+    private fun  generateFakeData(num: Int = 1): List<BaseItem> {
         for (i in lastIndex until lastIndex + num) {
             println("ZZLL i $i")
             fakeList.add(FakeDataItem("$i", i))
