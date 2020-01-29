@@ -20,5 +20,6 @@ abstract class BaseItemType<T : BaseItem> {
 
     open fun onBindViewHolder(holder: GenericListAdapter.BaseViewHolder<T>, item: T) {
         // Add customize binds here
+        holder.onBind(item)
     }
 }

@@ -211,8 +211,8 @@ class GenericListAdapter private constructor() :
         internal var skeletonOptions: SkeletonOptions? = null
         internal var adapterView: GenericListAdapterView? = null
 
-        fun addItemModule(viewType: Int, abc: BaseItemType<out BaseItem>): Builder {
-            hashMap[viewType] = abc as? BaseItemType<BaseItem>
+        fun addItemModule(viewType: Int, itemModule: BaseItemType<out BaseItem>): Builder {
+            hashMap[viewType] = itemModule as? BaseItemType<BaseItem>
                 ?: throw Throwable("GenericListAdapter #Builder #addItemModule ItemType must be of type BaseItemType<T: BaseItemType>")
 
             return this
